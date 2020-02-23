@@ -58,9 +58,5 @@ use -d or --dev flag to generate log files.
 |100| 812927.676200|
 
 ## performance Charts:
-```
 ![one group](1.png)
-```
-```
 ![5 groups](5.png)
-```
