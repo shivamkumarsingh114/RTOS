@@ -25,6 +25,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <sys/time.h>
 
 #define NTP_TIMESTAMP_DELTA 2208988800ull
 
@@ -34,16 +35,16 @@
 
 typedef long long ll;
 
-void error( char* msg )
+static void error( char* msg )
 {
     perror( msg ); // Print the error message to stderr.
 
     exit( 0 ); // Quit the process.
 }
 
-ll s_off, us_off;
+static ll us_off = 0;
 
-void ntp_init () {
+static void ntp_init () {
   int sockfd, n; // Socket file descriptor and the n return result from writing/reading from the socket.
 
   int portno = 123; // NTP UDP port number.
@@ -161,26 +162,32 @@ void ntp_init () {
 
   struct timeval tval;
   gettimeofday (&tval, NULL);
-
-  s_off = packet.txTm_s-tval.tv_sec;
-  us_off = packet.txTm_f*(1e6)/((ll)1 << 32);
+#define NTP_EPOCH_OFFSET 2208988800L
+  us_off += ((packet.txTm_s-NTP_EPOCH_OFFSET)*(1e6) + ((packet.txTm_f*(1e6))/((ll)1 << 32)));
+  us_off -= (tval.tv_sec*(1e6)+tval.tv_usec);
+  // us_off -= NTP_EPOCH_OFFSET*(1e6);
+  // us_off += (packet.txTm_s-tval.tv_sec);
+  // us_off += packet.txTm_f/((ll)1 << 32);
 }
 
-struct t_format gettime () {
+static struct t_format gettime () {
     struct timeval tval;
     gettimeofday (&tval, NULL);
     ll s = tval.tv_sec, us = tval.tv_usec;
-    s += s_off, us += us_off;
+    // ll tus = s*(1e6)+us;
+    // tus += us_off;
+    // s = tus/(1e6);
+    // us = tus-(s*(1e6));
 
-    while (us < 0) {
-        --s;
-        us += 1e6;
-    }
-    while (us >= 1e6) {
-        ++s;
-        us -= 1e6;
-    }
-
+    // us += us_off;
     struct t_format t = {s, us};
     return t;
+}
+
+static ll timediff (struct t_format t1, struct t_format t2) {
+    t2.s *= (1e6);
+    t1.s *= (1e6);
+
+    // printf ("%lld %lld\n", t1.s, t1.us);
+    return (t2.s-t1.s) + (t2.us-t1.us);
 }

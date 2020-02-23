@@ -1,9 +1,6 @@
-
 #pragma once
 
 enum Request {
-    NUM_ROOMS,
-    CREATE_ROOM,
     JOIN_ROOM,
     LEAVE_ROOM,
     SEND_MSG,
@@ -11,7 +8,7 @@ enum Request {
 
 enum ServerOps {
     MSG,
-    KILL,
+    BYE,
     NOTIF,
 };
 
@@ -19,13 +16,21 @@ typedef long long ll;
 
 struct t_format {
     ll s;
-    ll f;
+    ll us;
 };
 
+struct User {
+    char name[20];
+    int room;
+};
+
+struct Notification {
+    char msg[256];
+    struct t_format ts;
+};
 struct Msg {
     int grp;
-    char who[20];
-    // int from;
     struct t_format ts;
+    char who[20];
     char msg[256];
 };
