@@ -5,7 +5,7 @@ stat={}
 if __name__ == '__main__':
         nc=input("Range of clients (Eg: 10-100): ")
         np=input("Number Of Parallel Clients/Groups you want: ")
-        csvfilename=np+".csv"
+        csvfilename="./logs/"+np+".csv"
         startc=int(nc.split("-")[0])
         endc=int(nc.split("-")[1])
         for i in range(startc,endc+startc, startc):
