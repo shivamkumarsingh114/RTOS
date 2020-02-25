@@ -35,7 +35,7 @@ int main (int argc, char ** argv) {
         for (int i = 0; i < n_pclients; ++i) {
             int pid = fork ();
             if (pid == 0) {
-                execl ("bin/spam_client", "bin/spam_client", "0.0.0.0", port_str, "Vijay", "1", "0", NULL);
+                execl ("bin/spam_client", "bin/spam_client", "0.0.0.0", port_str, "Shivam", "1", "0", NULL);
             } else {
                 pids.push_back (pid);
             }
@@ -44,7 +44,7 @@ int main (int argc, char ** argv) {
         for (int i = 0; i < n_clients; ++i) {
             int pid = fork ();
             if (pid == 0) {
-                execl ("bin/test_client", "bin/test_client", "0.0.0.0", port_str, "Vijay", "1", "1", NULL);
+                execl ("bin/test_client", "bin/test_client", "0.0.0.0", port_str, "Shivam", "1", "1", NULL);
             } else {
                 pids.push_back (pid);
             }

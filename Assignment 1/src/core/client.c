@@ -71,7 +71,6 @@ void * listen_handler (void * arg) {
     struct queue * q = client->response_q;
     int req;
     while (read (client->sock_fd, &req, sizeof (int))) {
-        // read (client->sock_fd, &req, sizeof (int));
         struct t_format ts = gettime ();
         switch (req) {
             case MSG : {
@@ -125,6 +124,5 @@ void Client_exit (struct Client * client) {
     int w = write (client->sock_fd, &req, sizeof (req));
     if (w < 0) {}
     close (client->sock_fd);
-    // pthread_mutex_unlock (&client->lock);
-    LOG ("Client exited");
+    LOG ("Client Left");
 }

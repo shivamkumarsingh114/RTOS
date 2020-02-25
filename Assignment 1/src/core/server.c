@@ -63,8 +63,6 @@ void Server_listen (struct Server * server) {
 DECL_LIST_INTERFACE(int);
 DECL_LIST_IMPL(int);
 struct list dict[MAX_GROUPS];
-// pthread_mutex_t lock[MAX_GROUPS];
-
 
 void close_connection (int fd) {
     int req = BYE;
@@ -133,7 +131,7 @@ void * connection_handler (void * arg) {
                 READ(&room, sizeof (int));
                 READ(&usr, sizeof (struct User));
                 dict_insert (room, connfd);
-                // LOG ("New usr [%s] in room[%d]\n", usr.name, room);
+                LOG ("New usr [%s] in room[%d]\n", usr.name, room);
                 struct ClientNotification * notif = malloc (sizeof (struct ClientNotification));
                 // READ (&notif->notif.ts, sizeof (struct t_format));
                 notif->grp = room;
@@ -209,22 +207,6 @@ void * broadcast_handler (void * arg) {
             ++tot;
             int w1 = write (curr->val, &serv_op, sizeof (int));
             int w2 = write (curr->val, msg, sizeof (struct Msg));
-            // if (w1 != sizeof (int)) {
-            //     printf ("err=%d\n", errno);
-            //     if (errno == EPIPE) {
-            //         printf ("EPIPE\n");
-            //     }
-            //     printf ("w1=%d\n", w1);
-            //     assert (w1 == sizeof (int));
-            // }
-            // if (w2 != sizeof (struct Msg)) {
-            //     printf ("err=%d\n", errno);
-            //     if (errno == EPIPE) {
-            //         printf ("EPIPE\n");
-            //     }
-            //     printf ("w2=%d\n", w2);
-            //     assert (w2 == sizeof (struct Msg));
-            // }
             curr=curr->nxt;
         }
         free (msg);
