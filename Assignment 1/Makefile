@@ -4,7 +4,7 @@ client_core_src = $(wildcard src/core/client.c)
 ds_obj = $(ds_src:.c=.o)
 serv_obj = $(serv_src:.c=.o)
 client_core_obj = $(client_core_src:.c=.o)
-client_obj = src/ui/client.o
+client_obj = src/ext/client.o
 spam_client_obj = test/spam_client.o
 test_client_obj = test/test_client.o
 test_obj = test/tests.o

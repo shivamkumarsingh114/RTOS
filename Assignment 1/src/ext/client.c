@@ -18,7 +18,8 @@ int tot = 0, n = 0;
 void sigint_handler (int signum) {
     if (client_p != NULL) {
         if (stat) {
-            printf ("Avg delay = [%lf]us\n", ((double)tot)/n);
+            //printf ("\nAvg delay = [%lf]us\n", ((double)tot)/n);
+            printf("%s exiting the chat\n", client_p->usr.name);
         }
         Client_exit (client_p);
         exit (0);

@@ -18,15 +18,16 @@ void * listen_handler (void * arg);
 
 void Client_init (struct Client * client, char * serv_ip, int port, char * name, int room) {
     client->response_q = queue_new ();
+    // initalise the mutex with default attributes
     pthread_mutex_init (&client->lock, NULL);
 
-    pthread_mutex_lock (&client->lock);
-    CALL (client->sock_fd = socket (AF_INET, SOCK_STREAM, 0), "socket");
-
+    pthread_mutex_lock (&client->lock); //lock the mutex
+    CALL (client->sock_fd = socket (AF_INET, SOCK_STREAM, 0), "socket"); //create IPV4 socket
+    //set all the fiels of serveraddr_in to 0 (not necessary)
     memset(&client->serveraddr_in, '0', sizeof (struct sockaddr_in));
     client->serveraddr_in.sin_family = AF_INET;
-    client->serveraddr_in.sin_addr.s_addr = inet_addr (serv_ip);
-    client->serveraddr_in.sin_port = htons(port);
+    client->serveraddr_in.sin_addr.s_addr = inet_addr (serv_ip); //server ip to byte
+    client->serveraddr_in.sin_port = htons(port); //host byte to network byte
 
     CALL (connect ( client->sock_fd,
                     (struct sockaddr *)&client->serveraddr_in,
@@ -35,19 +36,22 @@ void Client_init (struct Client * client, char * serv_ip, int port, char * name,
         "connect");
 
     LOG ("Connected to Server");
+    printf("Connected to Server\n");
     ntp_init ();
-    strcpy (client->usr.name, name);
 
-    int req = JOIN_ROOM;
+    // strcpy (client->usr.name, name);
+    int req = JOIN_ROOM; //enum
     CALL (write (client->sock_fd, &req, sizeof (int)), "write");
 
+    //set client name as name given by user. see common.h
     struct User usr; strcpy (usr.name, name); usr.room = room;
     client->usr = usr;
+    //send room/group and name to server
     CALL (write (client->sock_fd, &room, sizeof (int)), "write");
     CALL (write (client->sock_fd, &usr, sizeof (struct User)), "write");
 
     pthread_mutex_unlock (&client->lock);
-
+    //create a thread for listen_handler with default attributes
     pthread_create (&client->tidr, NULL, listen_handler, (client));
 }
 
@@ -57,6 +61,7 @@ void Client_send (struct Client * client, char * buf, size_t len) {
     msg.grp = client->usr.room;
     msg.ts = gettime ();
 
+    //create the message to be sent
     strcpy (msg.who, client->usr.name);
     strcpy (msg.msg, buf);
 
@@ -96,28 +101,13 @@ void * listen_handler (void * arg) {
             }
             case BYE : {
                 LOG ("Server quit.");
+                printf("Server Quit\n");
                 return NULL;
             }
         }
     }
 }
 
-char * Msg_get_who (struct Msg * msg) {
-    return msg->who;
-}
-char * Msg_get_msg (struct Msg * msg) {
-    return msg->msg;
-}
-struct Msg * get_msg (void * resp) {
-    struct Msg * msg = (struct Msg *)(((struct ServerResponse*)resp)->data);
-    return msg;
-}
-struct Notification * get_notif (void * resp) {
-    return (struct Notification*)((struct ServerResponse*)resp)->data;
-}
-char * Notif_get_msg (struct Notification * notif) {
-    return notif->msg;
-}
 void Client_exit (struct Client * client) {
     int req = LEAVE_ROOM;
     pthread_mutex_lock (&client->lock);
