@@ -25,7 +25,7 @@ python3 ./test/stats.py
 use -d or --dev flag to generate log files.
  ```
 
-## performance:
+## Performance Table and Charts::
 
 ### Only One group
 
@@ -41,8 +41,9 @@ use -d or --dev flag to generate log files.
 |80| 198.786875|
 |90| 339.205600|
 |100|200.555263|
-
+![1 Group](./graphs/1.png)
 ### 2 Groups
+|Number of Clients| Time(micro sec)|
 |---|---|
 |10|	359.9275|
 |20|	426.186471|
@@ -54,7 +55,7 @@ use -d or --dev flag to generate log files.
 |80|	3679.855846|
 |90|	267461.8337|
 |100|	392802.5758|
-
+![2 Group](./graphs/2.png)
 ### 3 Groups
 |Number of Clients| Time(micro sec)|
 |---|---|
@@ -68,7 +69,7 @@ use -d or --dev flag to generate log files.
 |80|	284741.6994|
 |90|	448618.5388|
 |100|	521071.2014|
-
+![3 Group](./graphs/3.png)
 ### 5 groups
 
 |Number of Clients| Time(micro sec)|
@@ -83,9 +84,4 @@ use -d or --dev flag to generate log files.
 |80| 518816.587875|
 |90| 678022.167778|
 |100| 812927.676200|
-
-## performance Charts:
-![1 Group](./graphs/1.png)
-![2 Group](./graphs/2.png)
-![3 Group](./graphs/3.png)
 ![5 Groups](./graphs/5.png)
