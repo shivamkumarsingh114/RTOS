@@ -185,6 +185,7 @@ void * connection_handler (void * arg) {
     }
 }
 
+// will send all the messages stord in message queue
 void * broadcast_handler (void * arg) {
     while (1) {
         struct ClientResponse * resp = queue_pop (msgq);
