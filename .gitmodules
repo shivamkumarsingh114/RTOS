@@ -1,3 +1,7 @@
 [submodule "RTOS_voice_chat"]
 	path = RTOS_voice_chat
 	url = https://github.com/shivamkumarsingh114/RTOS_voice_chat.git
+[submodule "websever"]
+	path = websever
+	url = https://github.com/shivamkumarsingh114/FreeRTOS-ESP-32.git
+	branch = webserver
